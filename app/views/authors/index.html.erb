@@ -6,7 +6,7 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th colspan="3"></th>
+      <th colspan="4"></th>
     </tr>
   </thead>
 
@@ -15,6 +15,7 @@
       <tr>
         <td><%= author.name %></td>
         <td><%= link_to 'Show', author %></td>
+        <td><%= link_to 'Books', author_books_path(author) %></td>
         <td><%= link_to 'Edit', edit_author_path(author) %></td>
         <td><%= link_to 'Destroy', author, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>

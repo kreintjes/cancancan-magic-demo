@@ -1,10 +1,11 @@
 class BooksController < ApplicationController
+  before_action :set_author
   before_action :set_book, only: [:show, :edit, :update, :destroy]
 
   # GET /books
   # GET /books.json
   def index
-    @books = Book.all
+    @books = @author.books
   end
 
   # GET /books/1
@@ -14,7 +15,7 @@ class BooksController < ApplicationController
 
   # GET /books/new
   def new
-    @book = Book.new
+    @book = @author.books.new
   end
 
   # GET /books/1/edit
@@ -24,12 +25,12 @@ class BooksController < ApplicationController
   # POST /books
   # POST /books.json
   def create
-    @book = Book.new(book_params)
+    @book = @author.books.new(book_params)
 
     respond_to do |format|
       if @book.save
-        format.html { redirect_to @book, notice: 'Book was successfully created.' }
-        format.json { render :show, status: :created, location: @book }
+        format.html { redirect_to [@author, @book], notice: 'Book was successfully created.' }
+        format.json { render :show, status: :created, location: [@author, @book] }
       else
         format.html { render :new }
         format.json { render json: @book.errors, status: :unprocessable_entity }
@@ -42,8 +43,8 @@ class BooksController < ApplicationController
   def update
     respond_to do |format|
       if @book.update(book_params)
-        format.html { redirect_to @book, notice: 'Book was successfully updated.' }
-        format.json { render :show, status: :ok, location: @book }
+        format.html { redirect_to [@author, @book], notice: 'Book was successfully updated.' }
+        format.json { render :show, status: :ok, location: [@author, @book] }
       else
         format.html { render :edit }
         format.json { render json: @book.errors, status: :unprocessable_entity }
@@ -56,19 +57,23 @@ class BooksController < ApplicationController
   def destroy
     @book.destroy
     respond_to do |format|
-      format.html { redirect_to books_url, notice: 'Book was successfully destroyed.' }
+      format.html { redirect_to author_books_url(@author), notice: 'Book was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
+    def set_author
+      @author = Author.find(params[:author_id])
+    end
+
     def set_book
-      @book = Book.find(params[:id])
+      @book = @author.books.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def book_params
-      params.require(:book).permit(:author_id, :title)
+      params.require(:book).permit(:title)
     end
 end

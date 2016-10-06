@@ -2,5 +2,5 @@
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @book %> |
-<%= link_to 'Back', books_path %>
+<%= link_to 'Show', [@author, @book] %> |
+<%= link_to 'Back', author_books_path(@author) %>
